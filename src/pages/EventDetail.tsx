@@ -16,7 +16,6 @@ export const EventDetail: React.FC = () => {
   const { isFavorite, addFavorite, removeFavorite } = useFavorites();
   const [isInterested, setIsInterested] = useState(false);
   const [interestedCount, setInterestedCount] = useState<number>(mockEvents.find(e => e.id === id)?.interestedDancers?.length || 0);
-  const [showContactForm, setShowContactForm] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [event, setEvent] = useState(mockEvents.find(e => e.id === id)!);
 

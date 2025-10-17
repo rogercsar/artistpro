@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, User, LogOut, Settings, Bell, Search, Heart } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, Bell, Heart } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
-import { useTheme } from '../../hooks/useTheme';
 import { Button } from '../ui/Button';
 import { NotificationsModal } from '../NotificationsModal';
 import { cn } from '../../utils/cn';
 
 export const Header: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
-  const { theme } = useTheme();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Bell, Shield, Palette, Globe, Camera, Save, Eye, EyeOff } from 'lucide-react';
+import { User, Bell, Shield, Palette, Camera, Save, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
 import { Button } from '../components/ui/Button';

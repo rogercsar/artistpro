@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bell, X, Check, AlertCircle, Info, Heart, MessageCircle, Calendar, User } from 'lucide-react';
+import { Bell, Check, Info, Heart, MessageCircle, Calendar, User } from 'lucide-react';
 import { Modal } from './ui/Modal';
 import { Button } from './ui/Button';
 import { cn } from '../utils/cn';

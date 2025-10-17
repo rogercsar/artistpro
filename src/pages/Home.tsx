@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Star, Users, Calendar, MapPin, Heart, Share2, MessageCircle } from 'lucide-react';
+import { ArrowRight, Star, Calendar, MapPin, Heart, Share2 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent } from '../components/ui/Card';
 import { mockEvents, mockDancerProfiles } from '../data/mockData';
 
 export const Home: React.FC = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const featuredEvents = mockEvents.slice(0, 3);
   const featuredDancers = mockDancerProfiles.slice(0, 4);

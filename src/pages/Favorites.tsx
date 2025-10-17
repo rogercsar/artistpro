@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Calendar, MapPin, Clock, Star, Users, Trash2, Eye } from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import { Card, CardContent, CardHeader } from '../components/ui/Card';
+import { Card, CardContent } from '../components/ui/Card';
 import { useFavorites } from '../hooks/useFavorites';
 import { mockEvents, mockDancerProfiles, mockContractorProfiles } from '../data/mockData';
 import { isSupabaseConfigured } from '../lib/supabaseClient';

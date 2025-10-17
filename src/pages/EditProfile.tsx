@@ -10,13 +10,11 @@ import {
   ArrowLeft, 
   Plus, 
   Trash2,
-  MapPin,
-  Phone,
-  Mail,
+  
   Calendar,
   Globe,
   Instagram,
-  Youtube,
+  
   Facebook,
   Twitter
 } from 'lucide-react';
@@ -24,12 +22,10 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card, CardContent, CardHeader } from '../components/ui/Card';
 import { useAuth } from '../hooks/useAuth';
-import { useTheme } from '../hooks/useTheme';
 import { cn } from '../utils/cn';
 
 export const EditProfile: React.FC = () => {
   const { user, updateProfile } = useAuth();
-  const { theme } = useTheme();
   const navigate = useNavigate();
   
   // Refs para inputs de arquivo

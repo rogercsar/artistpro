@@ -24,7 +24,6 @@ export const Dancers: React.FC = () => {
   const [selectedDancer, setSelectedDancer] = useState<any>(null);
 
   const danceStyles = ['Ballet Clássico', 'Dança Contemporânea', 'Hip-Hop', 'Jazz', 'Street Dance', 'Breaking'];
-  const levels = ['basic', 'advanced', 'pro'];
 
   useEffect(() => {
     (async () => {
