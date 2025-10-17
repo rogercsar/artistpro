@@ -172,3 +172,53 @@ Para suporte, envie um email para contato@danz.com ou abra uma issue no reposit�
 ---
 
 Desenvolvido com ❤️ para a comunidade da dança
+
+## Deploy no Netlify (SPA + Functions)
+
+Este projeto usa React Router (SPA). Para evitar 404 ao acessar rotas diretamente (ex.: `/login`), já incluímos:
+
+- `public/_redirects` com `/* /index.html 200`
+- `netlify.toml` com build, publish, functions e redirect SPA
+
+Configuração usada em `netlify.toml`:
+
+```
+[build]
+  command = "npm run build"
+  publish = "build"
+
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
+
+Passos para publicar:
+
+- Build command: `npm run build`
+- Publish directory: `build`
+- Após o deploy, acesse `https://SEUSITE.netlify.app/login` (deve carregar sem 404)
+
+### Function de teste (logs)
+
+Adicionada function `netlify/functions/hello.js` para validar logs no painel do Netlify.
+
+- Endpoint: `/.netlify/functions/hello`
+- Logs: Deploys → Functions → hello
+
+### Variáveis de ambiente
+
+- Para o cliente (CRA): use prefixo `REACT_APP_` (ex.: `REACT_APP_SUPABASE_URL`)
+- Para scripts Node (ex.: `scripts/createAdminUser.cjs`):
+  - `SUPABASE_PROJECT_URL` ou `REACT_APP_SUPABASE_URL`
+  - `SUPABASE_SERVICE_ROLE_KEY`
+  - (opcionais) `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_NAME`
+
+Execução do script admin:
+
+```
+node scripts/createAdminUser.cjs
+```
