@@ -4,16 +4,18 @@ import { Calendar, Clock, MapPin, Users, Heart, Share2, MessageCircle, ArrowLeft
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardHeader } from '../components/ui/Card';
 import { mockEvents, mockDancerProfiles } from '../data/mockData';
-import { fetchEventById } from '../services/api';
+import { fetchEventById, addEventInterest, getEventInterestCount, getMyEventInterest, removeEventInterest } from '../services/api';
 import { useFavorites } from '../hooks/useFavorites';
 import { ContactModal } from '../components/ContactModal';
 import { useAuth } from '../hooks/useAuth';
+import { isSupabaseConfigured } from '../lib/supabaseClient';
 
 export const EventDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user, isAuthenticated } = useAuth();
   const { isFavorite, addFavorite, removeFavorite } = useFavorites();
   const [isInterested, setIsInterested] = useState(false);
+  const [interestedCount, setInterestedCount] = useState<number>(mockEvents.find(e => e.id === id)?.interestedDancers?.length || 0);
   const [showContactForm, setShowContactForm] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [event, setEvent] = useState(mockEvents.find(e => e.id === id)!);
@@ -26,8 +28,25 @@ export const EventDetail: React.FC = () => {
         const mapped: any = { ...e, danceStyles: (e as any).danceStyles || (e as any).genres || [] };
         setEvent(mapped);
       }
+      // Sync interesse e contador com Supabase quando disponível
+      if (id && isSupabaseConfigured) {
+        try {
+          const count = await getEventInterestCount(id);
+          setInterestedCount(count);
+        } catch {}
+      } else {
+        setInterestedCount(mockEvents.find(m => m.id === id)?.interestedDancers?.length || 0);
+      }
+      if (id && isAuthenticated && user?.type === 'dancer' && isSupabaseConfigured) {
+        try {
+          const mine = await getMyEventInterest(id);
+          setIsInterested(mine);
+        } catch {}
+      } else {
+        setIsInterested(false);
+      }
     })();
-  }, [id]);
+  }, [id, isAuthenticated, user?.type]);
 
   // Função para favoritar/desfavoritar evento
   const handleFavoriteToggle = () => {
@@ -52,12 +71,33 @@ export const EventDetail: React.FC = () => {
     );
   }
 
-  const handleInterest = () => {
+  const handleInterest = async () => {
     if (!isAuthenticated) {
-      // Redirect to login
+      // Redirecionar para login
+      window.location.href = '/login';
       return;
     }
-    setIsInterested(!isInterested);
+    if (user?.type !== 'dancer') return;
+
+    if (isSupabaseConfigured && id) {
+      if (isInterested) {
+        const ok = await removeEventInterest(id);
+        if (ok) {
+          setIsInterested(false);
+          setInterestedCount((c) => Math.max(0, c - 1));
+        }
+      } else {
+        const ok = await addEventInterest(id);
+        if (ok) {
+          setIsInterested(true);
+          setInterestedCount((c) => c + 1);
+        }
+      }
+      return;
+    }
+    // Fallback local (mock)
+    setIsInterested((v) => !v);
+    setInterestedCount((c) => (isInterested ? Math.max(0, c - 1) : c + 1));
   };
 
   const interestedDancers = mockDancerProfiles.filter(dancer => 
@@ -109,7 +149,9 @@ export const EventDetail: React.FC = () => {
                     }`}>
                       {event.status === 'active' ? 'Ativo' : event.status}
                     </span>
-                    <span>{event.interestedDancers.length} interessados</span>
+                    {!isSupabaseConfigured && (
+                      <span>{interestedCount} interessados</span>
+                    )}
                   </div>
                 </div>
                 <div className="flex space-x-2">
@@ -298,8 +340,8 @@ export const EventDetail: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Interested Artists */}
-          {interestedDancers.length > 0 && (
+          {/* Interested Artists (somente no modo mock) */}
+          {!isSupabaseConfigured && interestedDancers.length > 0 && (
             <Card>
               <CardHeader>
                 <h3 className="font-semibold text-gray-900">

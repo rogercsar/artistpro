@@ -7,7 +7,7 @@ export const Footer: React.FC = () => {
   const { theme } = useTheme();
   
   return (
-    <footer className={`${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-900'} text-white`}>
+    <footer className={`${theme === 'dark' ? 'bg-gradient-to-b from-slate-900 via-slate-900 to-black' : 'bg-gradient-to-b from-gray-900 via-gray-900 to-black'} text-white`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo e Descrição */}
@@ -18,7 +18,7 @@ export const Footer: React.FC = () => {
               </div>
               <span className="font-display font-bold text-xl">artistpro</span>
             </div>
-            <p className="text-gray-300 mb-6 max-w-md">
+            <p className="text-gray-300/90 mb-6 max-w-md">
               A plataforma que conecta artistas talentosos com contratantes em busca de excelência. 
               Descubra oportunidades, construa sua carreira e faça parte da comunidade criativa.
             </p>

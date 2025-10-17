@@ -1,3 +1,5 @@
+// Load environment variables from .env if available
+try { require('dotenv').config(); } catch (e) {}
 const { createClient } = require('@supabase/supabase-js');
 
 async function main() {
@@ -10,9 +12,9 @@ async function main() {
 
   const supabase = createClient(url, serviceKey);
 
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@danz.com';
-  const adminPassword = process.env.ADMIN_PASSWORD || 'Admin#123456';
-  const adminName = process.env.ADMIN_NAME || 'Admin Danz';
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@artistpro.com';
+  const adminPassword = process.env.ADMIN_PASSWORD || 'Admin#art25!';
+  const adminName = process.env.ADMIN_NAME || 'Admin APro';
 
   // Create auth user with admin role in metadata
   const { data: userData, error: adminErr } = await supabase.auth.admin.createUser({

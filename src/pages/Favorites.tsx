@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Calendar, MapPin, Clock, Star, Users, Trash2, Eye } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardHeader } from '../components/ui/Card';
 import { useFavorites } from '../hooks/useFavorites';
 import { mockEvents, mockDancerProfiles, mockContractorProfiles } from '../data/mockData';
+import { isSupabaseConfigured } from '../lib/supabaseClient';
+import { fetchEventsByIds, fetchProfilesByIds } from '../services/api';
+import { ContractorProfile, DancerProfile, Event } from '../types';
 
 export const Favorites: React.FC = () => {
   const { favorites, removeFavorite, getFavoritesByType } = useFavorites();
@@ -14,9 +17,58 @@ export const Favorites: React.FC = () => {
   const favoriteDancers = getFavoritesByType('dancer');
   const favoriteContractors = getFavoritesByType('contractor');
 
-  const getEventById = (id: string) => mockEvents.find(event => event.id === id);
-  const getDancerById = (id: string) => mockDancerProfiles.find(dancer => dancer.id === id);
-  const getContractorById = (id: string) => mockContractorProfiles.find(contractor => contractor.id === id);
+  const [eventsById, setEventsById] = useState<Record<string, Event>>({});
+  const [dancersById, setDancersById] = useState<Record<string, DancerProfile>>({});
+  const [contractorsById, setContractorsById] = useState<Record<string, ContractorProfile>>({});
+
+  const eventIds = useMemo(() => favoriteEvents.map(f => f.itemId), [favoriteEvents]);
+  const dancerIds = useMemo(() => favoriteDancers.map(f => f.itemId), [favoriteDancers]);
+  const contractorIds = useMemo(() => favoriteContractors.map(f => f.itemId), [favoriteContractors]);
+
+  useEffect(() => {
+    const load = async () => {
+      if (isSupabaseConfigured) {
+        try {
+          if (eventIds.length > 0) {
+            const events = await fetchEventsByIds(eventIds);
+            setEventsById(Object.fromEntries(events.map(e => [e.id, e])));
+          } else {
+            setEventsById({});
+          }
+          const profileIds = Array.from(new Set([...dancerIds, ...contractorIds]));
+          if (profileIds.length > 0) {
+            const profiles = await fetchProfilesByIds(profileIds);
+            const dancers: Record<string, DancerProfile> = {};
+            const contractors: Record<string, ContractorProfile> = {};
+            for (const p of profiles) {
+              if ((p as any).type === 'contractor') {
+                contractors[p.id] = p as ContractorProfile;
+              } else {
+                dancers[p.id] = p as DancerProfile;
+              }
+            }
+            setDancersById(dancers);
+            setContractorsById(contractors);
+          } else {
+            setDancersById({});
+            setContractorsById({});
+          }
+        } catch (e) {
+          console.error('Erro carregando favoritos reais, usando mocks', e);
+          // fallback mocks
+          setEventsById(Object.fromEntries(mockEvents.map(e => [e.id, e])));
+          setDancersById(Object.fromEntries(mockDancerProfiles.map(d => [d.id, d])) as any);
+          setContractorsById(Object.fromEntries(mockContractorProfiles.map(c => [c.id, c])) as any);
+        }
+      } else {
+        // modo mock
+        setEventsById(Object.fromEntries(mockEvents.map(e => [e.id, e])));
+        setDancersById(Object.fromEntries(mockDancerProfiles.map(d => [d.id, d])) as any);
+        setContractorsById(Object.fromEntries(mockContractorProfiles.map(c => [c.id, c])) as any);
+      }
+    };
+    load();
+  }, [eventIds, dancerIds, contractorIds]);
 
   const handleRemoveFavorite = (type: 'event' | 'dancer' | 'contractor', itemId: string) => {
     removeFavorite(type, itemId);
@@ -100,7 +152,7 @@ export const Favorites: React.FC = () => {
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">Eventos Favoritos</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {favoriteEvents.map((favorite) => {
-                        const event = getEventById(favorite.itemId);
+                        const event = eventsById[favorite.itemId];
                         if (!event) return null;
                         
                         return (
@@ -163,7 +215,7 @@ export const Favorites: React.FC = () => {
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">Artistas Favoritos</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                       {favoriteDancers.map((favorite) => {
-                        const dancer = getDancerById(favorite.itemId);
+                        const dancer = dancersById[favorite.itemId];
                         if (!dancer) return null;
                         
                         const levelBadge = getLevelBadge(dancer.level);
@@ -241,7 +293,7 @@ export const Favorites: React.FC = () => {
                     <h2 className="text-xl font-semibold text-gray-900 mb-4">Contratantes Favoritos</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {favoriteContractors.map((favorite) => {
-                        const contractor = getContractorById(favorite.itemId);
+                        const contractor = contractorsById[favorite.itemId];
                         if (!contractor) return null;
                         
                         return (

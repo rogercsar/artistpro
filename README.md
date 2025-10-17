@@ -30,7 +30,7 @@ Uma plataforma web moderna e responsiva que conecta bailarinos talentosos com co
 - **Roteamento**: React Router DOM
 - **Ícones**: Lucide React
 - **Estado**: Context API + Hooks personalizados
-- **Dados**: Mock data (simulação de API)
+- **Dados**: Supabase (com fallback para mock data)
 
 ## 📦 Instalação
 
@@ -52,6 +52,30 @@ Uma plataforma web moderna e responsiva que conecta bailarinos talentosos com co
 
 4. **Acesse a aplicação**
    Abra [http://localhost:3000](http://localhost:3000) no seu navegador
+
+## 🔌 Configuração do Supabase
+
+1. Crie um projeto no Supabase e copie a `Project URL` e a `Anon Key`.
+2. Crie um arquivo `.env` na raiz baseado no `.env.example`:
+   ```env
+   REACT_APP_SUPABASE_URL=<<SUA_URL_DO_SUPABASE>>
+   REACT_APP_SUPABASE_ANON_KEY=<<SUA_ANON_KEY>>
+
+   # Apenas para scripts Node (não expor no frontend)
+   SUPABASE_SERVICE_ROLE_KEY=<<SERVICE_ROLE_KEY>>
+   SUPABASE_PROJECT_URL=<<SUA_URL_DO_SUPABASE>>
+   ```
+3. Aplique o schema e (opcionalmente) o seed:
+   - Execute o conteúdo de `supabase/schema.sql` no SQL Editor do Supabase.
+   - Opcional: execute `supabase/seed.sql` para dados de exemplo.
+4. (Opcional) Crie um usuário admin via script Node:
+   ```bash
+   # Requer SUPABASE_SERVICE_ROLE_KEY e SUPABASE_PROJECT_URL definidos no .env
+   node scripts/createAdminUser.cjs
+   ```
+5. Inicie a aplicação normalmente com `npm start`.
+
+Quando as variáveis do Supabase estiverem corretamente definidas, a aplicação usará os dados reais (eventos, perfis, favoritos e interesses). Caso contrário, o app funciona com dados mockados para desenvolvimento.
 
 ## 🎯 Como Usar
 

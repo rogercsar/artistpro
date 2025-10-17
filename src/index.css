@@ -5,34 +5,40 @@
 /* Tema Claro (padrão) */
 .light {
   --bg-primary: #ffffff;
-  --bg-secondary: #f9fafb;
-  --bg-tertiary: #f3f4f6;
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --text-tertiary: #9ca3af;
-  --border-primary: #e5e7eb;
-  --border-secondary: #d1d5db;
-  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --border-primary: #e2e8f0;
+  --border-secondary: #cbd5e1;
+  --shadow: 0 10px 20px rgba(2, 8, 23, 0.06), 0 4px 6px rgba(2, 8, 23, 0.05);
 }
 
 /* Tema Escuro */
 .dark {
-  --bg-primary: #111827;
-  --bg-secondary: #1f2937;
-  --bg-tertiary: #374151;
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --text-tertiary: #9ca3af;
-  --border-primary: #374151;
-  --border-secondary: #4b5563;
-  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --bg-primary: #0b1220;
+  --bg-secondary: #0f172a;
+  --bg-tertiary: #111827;
+  --text-primary: #e5e7eb;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --border-primary: #1f2937;
+  --border-secondary: #334155;
+  --shadow: 0 12px 24px rgba(0, 0, 0, 0.45), 0 6px 10px rgba(0,0,0,0.3);
 }
 
 /* Aplicar variáveis CSS */
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background 0.4s ease, color 0.3s ease;
+  /* Gradiente de fundo sutil com padrão radial */
+  background-image:
+    radial-gradient(1200px 600px at 0% -10%, rgba(14,165,233,0.10), rgba(14,165,233,0) 70%),
+    radial-gradient(1000px 500px at 100% 0%, rgba(217,70,239,0.10), rgba(217,70,239,0) 65%),
+    radial-gradient(800px 400px at 50% 120%, rgba(249,115,22,0.10), rgba(249,115,22,0) 60%);
+  background-attachment: fixed;
 }
 
 /* Classes utilitárias para tema */
@@ -78,7 +84,7 @@ body {
   }
   
   body {
-    @apply text-gray-900 bg-gray-50;
+    @apply text-gray-900 dark:text-gray-100;
     /* Suporte para safe area em dispositivos móveis */
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
@@ -100,6 +106,17 @@ body {
 }
 
 @layer components {
+  /* Containers e cartões suaves */
+  .surface {
+    @apply bg-white/80 dark:bg-slate-900/70 border border-gray-200/70 dark:border-slate-700/50 backdrop-blur supports-[backdrop-filter]:bg-white/60 rounded-2xl shadow-theme;
+  }
+  .card {
+    @apply bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm;
+  }
+  .card-hover {
+    @apply transition-all hover:shadow-md hover:-translate-y-0.5;
+  }
+
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;

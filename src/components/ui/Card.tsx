@@ -23,9 +23,9 @@ export const Card: React.FC<CardProps> = ({
   return (
     <div
       className={cn(
-        'bg-white rounded-xl border border-gray-200 shadow-sm',
+        'bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm',
         paddingClasses[padding],
-        hover && 'hover:shadow-md transition-shadow duration-200',
+        hover && 'hover:shadow-md hover:-translate-y-0.5 transition-all duration-200',
         className
       )}
     >
@@ -62,7 +62,7 @@ interface CardFooterProps {
 }
 
 export const CardFooter: React.FC<CardFooterProps> = ({ children, className }) => (
-  <div className={cn('mt-4 pt-4 border-t border-gray-100', className)}>
+  <div className={cn('mt-4 pt-4 border-t border-gray-100 dark:border-slate-800', className)}>
     {children}
   </div>
 );
