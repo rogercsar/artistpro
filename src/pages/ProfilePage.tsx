@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { BookmarkPlus, Calendar, Camera, MessageCircle } from 'lucide-react'
+import { BookmarkPlus, Calendar, Camera, MessageCircle, Users } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { ProfileHero } from '../components/ProfileHero'
 import { Badge } from '../components/Badge'
@@ -180,12 +180,23 @@ export function ProfilePage() {
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {events.map((event: { id: string; category: string; title: string; description: string; interestedBy: string[]; likedBy: string[] }) => (
               <article key={event.id} className="rounded-2xl border border-slate-100 p-4">
-                <p className="text-xs uppercase text-slate-500">{event.category}</p>
-                <h4 className="mt-2 font-semibold text-slate-900">{event.title}</h4>
-                <p className="text-sm text-slate-600">{event.description}</p>
-                <div className="mt-3 flex gap-4 text-xs font-semibold uppercase text-slate-500">
-                  <span>{event.interestedBy.length} interesses</span>
-                  <span>{event.likedBy.length} favoritos</span>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1">
+                    <p className="text-xs uppercase text-slate-500">{event.category}</p>
+                    <h4 className="mt-2 font-semibold text-slate-900">{event.title}</h4>
+                    <p className="text-sm text-slate-600">{event.description}</p>
+                    <div className="mt-3 flex gap-4 text-xs font-semibold uppercase text-slate-500">
+                      <span>{event.interestedBy.length} interesses</span>
+                      <span>{event.likedBy.length} favoritos</span>
+                    </div>
+                  </div>
+                  {event.interestedBy.length > 0 && (
+                    <Link to={`/candidates/${event.id}`}>
+                      <Button variant="ghost" size="sm" iconLeft={<Users size={16} />}>
+                        Gerenciar
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               </article>
             ))}

@@ -9,6 +9,7 @@ import { ProfilePage } from './pages/ProfilePage'
 import { EditProfilePage } from './pages/EditProfilePage'
 import { MessagesPage } from './pages/MessagesPage'
 import { NotificationsPage } from './pages/NotificationsPage'
+import { CandidatesPage } from './pages/CandidatesPage'
 import { AdminPage } from './pages/AdminPage'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
@@ -29,6 +30,8 @@ export const router = createBrowserRouter([
       { path: '/messages', element: <MessagesPage /> },
       { path: '/messages/:threadId', element: <MessagesPage /> },
       { path: '/notifications', element: <NotificationsPage /> },
+      { path: '/candidates', element: <CandidatesPage /> },
+      { path: '/candidates/:eventId', element: <CandidatesPage /> },
       { path: '/admin', element: <AdminPage /> },
       { path: '/login', element: <LoginPage /> },
       { path: '/register', element: <RegisterPage /> },
