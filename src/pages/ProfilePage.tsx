@@ -141,7 +141,7 @@ export function ProfilePage() {
             </Button>
           </header>
           <div className="mt-4 space-y-4">
-            {artist.reviews.map((review: { id: string; rating: number; comment: string }) => (
+            {artist.reviews.map((review: { id: string; rating: number; comment: string; createdAt: string }) => (
               <article key={review.id} className="rounded-2xl border border-slate-100 p-4">
                 <p className="text-sm text-amber-500">{'★'.repeat(review.rating)}</p>
                 <p className="mt-2 text-slate-900">{review.comment}</p>
