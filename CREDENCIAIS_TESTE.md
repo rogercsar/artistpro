@@ -75,11 +75,20 @@ Além dos usuários de teste, o sistema já possui usuários pré-configurados n
 
 1. **Sem senha:** O sistema atual não utiliza autenticação por senha. O login é feito apenas com email e tipo de usuário.
 
-2. **Dados locais:** Os dados são armazenados no `localStorage` do navegador. Para resetar, limpe o localStorage ou use a função de reset (se disponível).
+2. **Dados locais:** Os dados são armazenados no `localStorage` do navegador. Os usuários de teste são automaticamente adicionados aos dados existentes.
 
 3. **Persistência:** As alterações feitas durante os testes são salvas localmente e persistem entre sessões.
 
 4. **Criar novos usuários:** Você pode criar novos usuários através da página de registro (`/register`).
+
+5. **Se os usuários de teste não aparecerem:** 
+   - Os usuários de teste são automaticamente mesclados com os dados existentes no localStorage
+   - Se ainda assim não funcionar, limpe o localStorage do navegador:
+     - Abra o DevTools (F12)
+     - Vá para a aba "Application" (Chrome) ou "Storage" (Firefox)
+     - Encontre "Local Storage" → seu domínio
+     - Delete a chave `artistpro:data`
+     - Recarregue a página
 
 ---
 

@@ -26,9 +26,52 @@ export const storageService = {
   bootstrap(): AppDataShape {
     if (!hasWindow()) return mockData
     const cached = safeParse<AppDataShape>(localStorage.getItem(DATA_KEY))
-    if (cached) return cached
-    localStorage.setItem(DATA_KEY, JSON.stringify(mockData))
-    return mockData
+    if (!cached) {
+      localStorage.setItem(DATA_KEY, JSON.stringify(mockData))
+      return mockData
+    }
+    
+    // Mesclar usuários de teste do mockData com dados existentes
+    // Garante que os usuários de teste sempre estejam disponíveis
+    const testArtist = mockData.artists.find((a) => a.id === 'artist-test')
+    const testContractor = mockData.contractors.find((c) => c.id === 'contractor-test')
+    const testAdmin = mockData.admins.find((a) => a.id === 'admin-test')
+    
+    let updated = { ...cached }
+    
+    // Adicionar/atualizar artista de teste
+    if (testArtist) {
+      const existingIndex = updated.artists.findIndex((a) => a.id === 'artist-test')
+      if (existingIndex >= 0) {
+        updated.artists[existingIndex] = testArtist
+      } else {
+        updated.artists.push(testArtist)
+      }
+    }
+    
+    // Adicionar/atualizar contratante de teste
+    if (testContractor) {
+      const existingIndex = updated.contractors.findIndex((c) => c.id === 'contractor-test')
+      if (existingIndex >= 0) {
+        updated.contractors[existingIndex] = testContractor
+      } else {
+        updated.contractors.push(testContractor)
+      }
+    }
+    
+    // Adicionar/atualizar admin de teste
+    if (testAdmin) {
+      const existingIndex = updated.admins.findIndex((a) => a.id === 'admin-test')
+      if (existingIndex >= 0) {
+        updated.admins[existingIndex] = testAdmin
+      } else {
+        updated.admins.push(testAdmin)
+      }
+    }
+    
+    // Salvar dados atualizados
+    localStorage.setItem(DATA_KEY, JSON.stringify(updated))
+    return updated
   },
   getData(): AppDataShape {
     if (!hasWindow()) return mockData
