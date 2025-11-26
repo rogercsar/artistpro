@@ -10,6 +10,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconLeft?: ReactNode
   iconRight?: ReactNode
   loading?: boolean
+  children?: ReactNode
 }
 
 const base =
