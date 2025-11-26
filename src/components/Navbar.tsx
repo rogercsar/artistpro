@@ -1,8 +1,9 @@
-import { Menu, X } from 'lucide-react'
+import { Menu, X, MessageCircle, Bell } from 'lucide-react'
 import { useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { Button } from './Button'
+import { Badge } from './Badge'
 
 const navLinks = [
   { to: '/events', label: 'Eventos' },
@@ -52,6 +53,20 @@ export function Navbar() {
         <div className="hidden items-center gap-3 md:flex">
           {currentUser ? (
             <>
+              <Link to="/messages" className="relative">
+                <Button variant="ghost" size="sm" iconLeft={<MessageCircle size={18} />} />
+              </Link>
+              <Link to="/notifications" className="relative">
+                <Button variant="ghost" size="sm" iconLeft={<Bell size={18} />} />
+                {unreadNotifications > 0 && (
+                  <Badge
+                    variant="accent"
+                    className="absolute -right-1 -top-1 h-5 w-5 p-0 flex items-center justify-center text-xs"
+                  >
+                    {unreadNotifications}
+                  </Badge>
+                )}
+              </Link>
               <span className="text-sm text-slate-600">
                 Olá, <strong className="text-slate-900">{currentUser.name.split(' ')[0]}</strong>
               </span>

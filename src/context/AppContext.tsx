@@ -48,6 +48,8 @@ interface AppContextValue {
   toggleInterest: (eventId: string) => void
   toggleLike: (eventId: string) => void
   updateProfile: (user: PlatformUser) => void
+  updateUser: (user: PlatformUser) => void
+  createEvent: (event: Omit<EventItem, 'id' | 'contractorId' | 'likedBy' | 'interestedBy' | 'shareCount'>, contractorId: string) => void
   getEventById: (id: string) => EventItem | undefined
   getEventsByContractor: (contractorId: string) => EventItem[]
 }
@@ -184,6 +186,24 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setData(next)
   }
 
+  const updateUser = updateProfile
+
+  const createEvent = (
+    event: Omit<EventItem, 'id' | 'contractorId' | 'likedBy' | 'interestedBy' | 'shareCount'>,
+    contractorId: string,
+  ) => {
+    const newEvent: EventItem = {
+      ...event,
+      id: generateId('event'),
+      contractorId,
+      likedBy: [],
+      interestedBy: [],
+      shareCount: 0,
+    }
+    const next = { ...data, events: [...data.events, newEvent] }
+    persist(next)
+  }
+
   const value: AppContextValue = useMemo(
     () => ({
       data,
@@ -194,6 +214,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       toggleInterest,
       toggleLike,
       updateProfile,
+      updateUser,
+      createEvent,
       getEventById: (id: string) => data.events.find((event) => event.id === id),
       getEventsByContractor: (contractorId: string) =>
         data.events.filter((event) => event.contractorId === contractorId),

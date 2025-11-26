@@ -1,4 +1,6 @@
-import { Camera, MapPin, ShieldCheck, Users } from 'lucide-react'
+import { Camera, MapPin, ShieldCheck, Users, Edit } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { useApp } from '../context/AppContext'
 import type { PlatformUser } from '../types'
 import { Badge } from './Badge'
 import { Button } from './Button'
@@ -8,6 +10,9 @@ interface ProfileHeroProps {
 }
 
 export function ProfileHero({ user }: ProfileHeroProps) {
+  const { currentUser } = useApp()
+  const isOwnProfile = currentUser?.id === user.id
+
   return (
     <section className="relative overflow-hidden rounded-3xl bg-hero-gradient p-6 text-white shadow-glow md:p-10">
       <div className="flex flex-col gap-6 md:flex-row md:items-center">
@@ -41,12 +46,18 @@ export function ProfileHero({ user }: ProfileHeroProps) {
             )}
           </div>
         </div>
-        <div className="flex flex-col gap-3">
-          <Button className="bg-white text-brand-700">Atualizar perfil</Button>
-          <Button variant="ghost" className="border-white/40 text-white" iconLeft={<Camera size={16} />}>
-            Adicionar mídia
-          </Button>
-        </div>
+        {isOwnProfile && (
+          <div className="flex flex-col gap-3">
+            <Link to="/profile/edit">
+              <Button className="bg-white text-brand-700" iconLeft={<Edit size={16} />}>
+                Editar perfil
+              </Button>
+            </Link>
+            <Button variant="ghost" className="border-white/40 text-white" iconLeft={<Camera size={16} />}>
+              Adicionar mídia
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   )

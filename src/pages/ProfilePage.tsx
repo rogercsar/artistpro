@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { BookmarkPlus, Calendar, Camera, MessageCircle } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { ProfileHero } from '../components/ProfileHero'
@@ -173,7 +173,9 @@ export function ProfilePage() {
                 Gerencie candidatos, likes e interesses em um só lugar.
               </p>
             </div>
-            <Button iconLeft={<Calendar size={16} />}>Publicar novo evento</Button>
+            <Link to="/events/new">
+              <Button iconLeft={<Calendar size={16} />}>Publicar novo evento</Button>
+            </Link>
           </header>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {events.map((event: { id: string; category: string; title: string; description: string; interestedBy: string[]; likedBy: string[] }) => (
