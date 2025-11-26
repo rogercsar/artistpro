@@ -1,10 +1,12 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { BookmarkPlus, Calendar, Camera, MessageCircle, Users } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { ProfileHero } from '../components/ProfileHero'
 import { Badge } from '../components/Badge'
 import { Button } from '../components/Button'
+import { UploadMediaModal } from '../components/UploadMediaModal'
+import { RequestReviewModal } from '../components/RequestReviewModal'
 import type { PlatformUser, ArtistProfile, ContractorProfile, AdminProfile } from '../types'
 
 export function ProfilePage() {
@@ -47,8 +49,21 @@ export function ProfilePage() {
   )
 
   function ArtistProfileSections({ artist }: { artist: ArtistProfile }) {
+    const [showUploadModal, setShowUploadModal] = useState(false)
+    const [showReviewModal, setShowReviewModal] = useState(false)
+
     return (
       <>
+        <UploadMediaModal
+          isOpen={showUploadModal}
+          onClose={() => setShowUploadModal(false)}
+          artist={artist}
+        />
+        <RequestReviewModal
+          isOpen={showReviewModal}
+          onClose={() => setShowReviewModal(false)}
+          artist={artist}
+        />
         <section className="grid gap-6 md:grid-cols-3">
           <div className="rounded-3xl border border-slate-100 bg-white p-6">
             <h3 className="font-semibold text-slate-900">Skills e Habilidades</h3>
@@ -88,7 +103,12 @@ export function ProfilePage() {
           <div className="rounded-3xl border border-slate-100 bg-white p-6">
             <header className="flex items-center justify-between">
               <h3 className="font-semibold text-slate-900">Portfólio</h3>
-              <Button size="sm" variant="ghost" iconLeft={<Camera size={16} />}>
+              <Button 
+                size="sm" 
+                variant="ghost" 
+                iconLeft={<Camera size={16} />}
+                onClick={() => setShowUploadModal(true)}
+              >
                 Enviar mídia
               </Button>
             </header>
@@ -136,7 +156,12 @@ export function ProfilePage() {
               <h3 className="font-semibold text-slate-900">Reviews</h3>
               <p className="text-sm text-slate-500">Contratantes reais avaliando sua entrega.</p>
             </div>
-            <Button size="sm" variant="ghost" iconLeft={<BookmarkPlus size={16} />}>
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              iconLeft={<BookmarkPlus size={16} />}
+              onClick={() => setShowReviewModal(true)}
+            >
               Pedir avaliação
             </Button>
           </header>
@@ -218,9 +243,11 @@ export function ProfilePage() {
                   </p>
                   <p className="text-slate-900">{thread.lastMessagePreview}</p>
                 </div>
-                <Button variant="ghost" size="sm" iconLeft={<MessageCircle size={16} />}>
-                  Abrir chat
-                </Button>
+                <Link to={`/messages/${thread.id}`}>
+                  <Button variant="ghost" size="sm" iconLeft={<MessageCircle size={16} />}>
+                    Abrir chat
+                  </Button>
+                </Link>
               </div>
             ))}
             {data.threads.length === 0 && (

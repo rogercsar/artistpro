@@ -1,9 +1,11 @@
-import { Camera, MapPin, ShieldCheck, Users, Edit } from 'lucide-react'
+import { Camera, MapPin, ShieldCheck, Users, Edit, Calendar } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import { useApp } from '../context/AppContext'
 import type { PlatformUser } from '../types'
 import { Badge } from './Badge'
 import { Button } from './Button'
+import { UploadMediaModal } from './UploadMediaModal'
 
 interface ProfileHeroProps {
   user: PlatformUser
@@ -12,6 +14,7 @@ interface ProfileHeroProps {
 export function ProfileHero({ user }: ProfileHeroProps) {
   const { currentUser } = useApp()
   const isOwnProfile = currentUser?.id === user.id
+  const [showUploadModal, setShowUploadModal] = useState(false)
 
   return (
     <section className="relative overflow-hidden rounded-3xl bg-hero-gradient p-6 text-white shadow-glow md:p-10">
@@ -49,13 +52,38 @@ export function ProfileHero({ user }: ProfileHeroProps) {
         {isOwnProfile && (
           <div className="flex flex-col gap-3">
             <Link to="/profile/edit">
-              <Button className="bg-white text-brand-700" iconLeft={<Edit size={16} />}>
+              <Button className="bg-white text-brand-700 hover:bg-white/90 font-semibold" iconLeft={<Edit size={16} />}>
                 Editar perfil
               </Button>
             </Link>
-            <Button variant="ghost" className="border-white/40 text-white" iconLeft={<Camera size={16} />}>
-              Adicionar mídia
-            </Button>
+            {user.role === 'artist' && (
+              <>
+                <Button 
+                  variant="ghost" 
+                  className="border-2 border-white/60 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 hover:border-white" 
+                  iconLeft={<Camera size={16} />}
+                  onClick={() => setShowUploadModal(true)}
+                >
+                  Adicionar mídia
+                </Button>
+                <UploadMediaModal
+                  isOpen={showUploadModal}
+                  onClose={() => setShowUploadModal(false)}
+                  artist={user as import('../types').ArtistProfile}
+                />
+              </>
+            )}
+            {user.role === 'contractor' && (
+              <Link to="/events/new">
+                <Button 
+                  variant="ghost" 
+                  className="border-2 border-white/60 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 hover:border-white" 
+                  iconLeft={<Calendar size={16} />}
+                >
+                  Publicar evento
+                </Button>
+              </Link>
+            )}
           </div>
         )}
       </div>
