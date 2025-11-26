@@ -52,7 +52,7 @@ export function ProfileHero({ user }: ProfileHeroProps) {
         {isOwnProfile && (
           <div className="flex flex-col gap-3">
             <Link to="/profile/edit">
-              <Button className="bg-white text-brand-700 hover:bg-white/90 font-semibold" iconLeft={<Edit size={16} />}>
+              <Button className="!bg-white !text-brand-700 hover:!bg-white/90 font-semibold shadow-lg" iconLeft={<Edit size={16} />}>
                 Editar perfil
               </Button>
             </Link>
