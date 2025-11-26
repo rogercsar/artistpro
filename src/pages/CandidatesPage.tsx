@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, User, CheckCircle, XCircle, Clock, Eye, MessageCircle } from 'lucide-react'
+import { ArrowLeft, CheckCircle, XCircle, Clock, Eye, MessageCircle } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { Button } from '../components/Button'
 import { Badge } from '../components/Badge'
 import type { ArtistProfile } from '../types'
+import type { LucideIcon } from 'lucide-react'
 
 type CandidateStatus = 'new' | 'reviewing' | 'shortlisted' | 'rejected' | 'hired'
 
@@ -16,7 +17,9 @@ interface Candidate {
   notes?: string
 }
 
-const statusConfig: Record<CandidateStatus, { label: string; color: string; icon: any }> = {
+type StatusConfig = Record<CandidateStatus, { label: string; color: string; icon: LucideIcon }>
+
+const statusConfig: StatusConfig = {
   new: { label: 'Novos', color: 'bg-blue-100 text-blue-700', icon: Clock },
   reviewing: { label: 'Em análise', color: 'bg-amber-100 text-amber-700', icon: Eye },
   shortlisted: { label: 'Selecionados', color: 'bg-emerald-100 text-emerald-700', icon: CheckCircle },
@@ -27,6 +30,20 @@ const statusConfig: Record<CandidateStatus, { label: string; color: string; icon
 export function CandidatesPage() {
   const { data, currentUser } = useApp()
   const { eventId } = useParams()
+  const [candidateStatuses, setCandidateStatuses] = useState<Record<string, CandidateStatus>>(() => {
+    // Carregar status salvos do localStorage
+    const saved: Record<string, CandidateStatus> = {}
+    if (typeof window !== 'undefined') {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i)
+        if (key?.startsWith('candidate:')) {
+          const [, eventId, artistId] = key.split(':')
+          saved[`${eventId}:${artistId}`] = localStorage.getItem(key) as CandidateStatus
+        }
+      }
+    }
+    return saved
+  })
 
   if (!currentUser || currentUser.role !== 'contractor') {
     return (
@@ -46,8 +63,8 @@ export function CandidatesPage() {
     allEvents.forEach((evt) => {
       candidates[evt.id] = evt.interestedBy.map((artistId, index) => {
         // Tentar recuperar status salvo, senão usar padrão baseado no índice
-        const statusKey = `candidate:${evt.id}:${artistId}`
-        const savedStatus = localStorage.getItem(statusKey) as CandidateStatus | null
+        const statusKey = `${evt.id}:${artistId}`
+        const savedStatus = candidateStatuses[statusKey]
         const defaultStatus = (['new', 'reviewing', 'shortlisted', 'rejected', 'hired'][index % 5] || 'new') as CandidateStatus
         
         return {
@@ -60,7 +77,7 @@ export function CandidatesPage() {
     })
     
     return candidates
-  }, [allEvents])
+  }, [allEvents, candidateStatuses])
 
   const selectedEvent = event || allEvents[0]
   const candidates = selectedEvent ? candidatesByEvent[selectedEvent.id] || [] : []
@@ -82,11 +99,17 @@ export function CandidatesPage() {
   }, [candidates])
 
   const updateCandidateStatus = (artistId: string, newStatus: CandidateStatus) => {
+    if (!selectedEvent) return
+    
     // Armazenar status no localStorage
-    const statusKey = `candidate:${selectedEvent?.id}:${artistId}`
+    const statusKey = `candidate:${selectedEvent.id}:${artistId}`
     localStorage.setItem(statusKey, newStatus)
-    // Forçar re-render
-    window.location.reload()
+    
+    // Atualizar estado local
+    setCandidateStatuses((prev) => ({
+      ...prev,
+      [`${selectedEvent.id}:${artistId}`]: newStatus,
+    }))
   }
 
   return (
@@ -202,7 +225,7 @@ function CandidateCard({
   candidate: Candidate
   artist: ArtistProfile
   onStatusChange: (artistId: string, status: CandidateStatus) => void
-  statusConfig: typeof statusConfig
+  statusConfig: StatusConfig
 }) {
   const [showActions, setShowActions] = useState(false)
 
@@ -252,12 +275,12 @@ function CandidateCard({
       )}
 
       <div className="mt-3 flex gap-1">
-        {Object.entries(statusConfig).map(([status, config]) => {
+        {(Object.entries(statusConfig) as [CandidateStatus, StatusConfig[CandidateStatus]][]).map(([status, config]) => {
           if (status === candidate.status) return null
           return (
             <button
               key={status}
-              onClick={() => onStatusChange(candidate.artistId, status as CandidateStatus)}
+              onClick={() => onStatusChange(candidate.artistId, status)}
               className={`flex-1 rounded-lg px-2 py-1 text-xs font-semibold transition ${config.color} hover:opacity-80`}
               title={`Mover para ${config.label}`}
             >

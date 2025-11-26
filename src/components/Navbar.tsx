@@ -12,9 +12,10 @@ const navLinks = [
 ]
 
 export function Navbar() {
-  const { currentUser, logout } = useApp()
+  const { currentUser, logout, data } = useApp()
   const location = useLocation()
   const [open, setOpen] = useState(false)
+  const unreadNotifications = data.notifications.filter((n) => !n.read).length
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/90 backdrop-blur-md">

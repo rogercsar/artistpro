@@ -1,13 +1,12 @@
 import { type FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Save, Camera, X } from 'lucide-react'
+import { ArrowLeft, Save } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { Button } from '../components/Button'
-import { Badge } from '../components/Badge'
 import type { ArtistProfile, ContractorProfile } from '../types'
 
 export function EditProfilePage() {
-  const { currentUser, data, updateUser } = useApp()
+  const { currentUser, updateProfile } = useApp()
   const navigate = useNavigate()
 
   if (!currentUser) {
@@ -37,7 +36,7 @@ export function EditProfilePage() {
 }
 
 function EditArtistProfile({ artist }: { artist: ArtistProfile }) {
-  const { updateUser } = useApp()
+  const { updateProfile } = useApp()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
 
@@ -80,7 +79,7 @@ function EditArtistProfile({ artist }: { artist: ArtistProfile }) {
       social: formData.social,
     }
 
-    updateUser(updated)
+    updateProfile(updated)
     setLoading(false)
     navigate('/profile')
   }
@@ -289,7 +288,7 @@ function EditArtistProfile({ artist }: { artist: ArtistProfile }) {
 }
 
 function EditContractorProfile({ contractor }: { contractor: ContractorProfile }) {
-  const { updateUser } = useApp()
+  const { updateProfile } = useApp()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
 
@@ -326,7 +325,7 @@ function EditContractorProfile({ contractor }: { contractor: ContractorProfile }
       social: formData.social,
     }
 
-    updateUser(updated)
+    updateProfile(updated)
     setLoading(false)
     navigate('/profile')
   }

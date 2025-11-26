@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Bell, Check, X, Calendar, Heart, MessageCircle } from 'lucide-react'
+import { Bell, Calendar, Heart, MessageCircle } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { Button } from '../components/Button'

@@ -1,9 +1,8 @@
 import { type FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Calendar, MapPin, Save, X } from 'lucide-react'
+import { ArrowLeft, Save } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { Button } from '../components/Button'
-import { Badge } from '../components/Badge'
 import type { EventItem } from '../types'
 
 export function CreateEventPage() {

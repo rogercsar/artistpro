@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Send, ArrowLeft, MessageCircle, User } from 'lucide-react'
+import { Send, MessageCircle, User } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { Button } from '../components/Button'
 import { Badge } from '../components/Badge'
