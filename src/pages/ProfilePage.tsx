@@ -5,7 +5,7 @@ import { useApp } from '../context/AppContext'
 import { ProfileHero } from '../components/ProfileHero'
 import { Badge } from '../components/Badge'
 import { Button } from '../components/Button'
-import type { PlatformUser } from '../types'
+import type { PlatformUser, ArtistProfile, ContractorProfile, AdminProfile } from '../types'
 
 export function ProfilePage() {
   const { data, currentUser } = useApp()
@@ -37,24 +37,23 @@ export function ProfilePage() {
       <ProfileHero user={resolvedUser} />
 
       {resolvedUser.role === 'artist' ? (
-        <ArtistProfileSections />
+        <ArtistProfileSections artist={resolvedUser} />
       ) : resolvedUser.role === 'contractor' ? (
-        <ContractorProfileSections contractorId={resolvedUser.id} />
+        <ContractorProfileSections contractor={resolvedUser} />
       ) : (
-        <AdminPanelAlerts />
+        <AdminPanelAlerts admin={resolvedUser} />
       )}
     </div>
   )
 
-  function ArtistProfileSections() {
-    const artist = resolvedUser.role === 'artist' ? resolvedUser : data.artists[0]
+  function ArtistProfileSections({ artist }: { artist: ArtistProfile }) {
     return (
       <>
         <section className="grid gap-6 md:grid-cols-3">
           <div className="rounded-3xl border border-slate-100 bg-white p-6">
             <h3 className="font-semibold text-slate-900">Skills e Habilidades</h3>
             <div className="mt-4 flex flex-wrap gap-2">
-              {artist.skills.map((skill) => (
+              {artist.skills.map((skill: string) => (
                 <Badge key={skill} variant="outline">
                   {skill}
                 </Badge>
@@ -64,7 +63,7 @@ export function ProfilePage() {
           <div className="rounded-3xl border border-slate-100 bg-white p-6">
             <h3 className="font-semibold text-slate-900">Agenda visível</h3>
             <ul className="mt-4 space-y-2 text-sm text-slate-600">
-              {artist.availability.map((slot) => (
+              {artist.availability.map((slot: string) => (
                 <li key={slot} className="flex items-center gap-2">
                   <Calendar size={14} className="text-brand-500" />
                   {slot}
@@ -76,7 +75,7 @@ export function ProfilePage() {
             <h3 className="font-semibold text-slate-900">Preferências</h3>
             <p className="mt-2 text-sm text-slate-600">Cidades alvo</p>
             <div className="mt-2 flex flex-wrap gap-2">
-              {artist.preferredCities.map((city) => (
+              {artist.preferredCities.map((city: string) => (
                 <Badge key={city} variant="brand">
                   {city}
                 </Badge>
@@ -94,7 +93,7 @@ export function ProfilePage() {
               </Button>
             </header>
             <div className="mt-4 grid grid-cols-3 gap-3">
-              {artist.portfolio.photos.map((photo) => (
+              {artist.portfolio.photos.map((photo: string) => (
                 <img
                   key={photo}
                   src={`${photo}?auto=format&fit=crop&w=400&q=80`}
@@ -114,7 +113,7 @@ export function ProfilePage() {
               <h3 className="font-semibold text-slate-900">Feed pessoal</h3>
             </header>
             <div className="mt-4 space-y-4">
-              {artist.feed.map((activity) => (
+              {artist.feed.map((activity: { id: string; createdAt: string; message: string }) => (
                 <div key={activity.id} className="rounded-2xl border border-slate-100 p-4">
                   <p className="text-sm text-slate-500">
                     {new Date(activity.createdAt).toLocaleDateString('pt-BR')}
@@ -142,7 +141,7 @@ export function ProfilePage() {
             </Button>
           </header>
           <div className="mt-4 space-y-4">
-            {artist.reviews.map((review) => (
+            {artist.reviews.map((review: { id: string; rating: number; comment: string }) => (
               <article key={review.id} className="rounded-2xl border border-slate-100 p-4">
                 <p className="text-sm text-amber-500">{'★'.repeat(review.rating)}</p>
                 <p className="mt-2 text-slate-900">{review.comment}</p>
@@ -162,8 +161,8 @@ export function ProfilePage() {
     )
   }
 
-  function ContractorProfileSections({ contractorId }: { contractorId: string }) {
-    const events = data.events.filter((event) => event.contractorId === contractorId)
+  function ContractorProfileSections({ contractor }: { contractor: ContractorProfile }) {
+    const events = data.events.filter((event: { contractorId: string }) => event.contractorId === contractor.id)
     return (
       <>
         <section className="rounded-3xl border border-slate-100 bg-white p-6">
@@ -177,7 +176,7 @@ export function ProfilePage() {
             <Button iconLeft={<Calendar size={16} />}>Publicar novo evento</Button>
           </header>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {events.map((event) => (
+            {events.map((event: { id: string; category: string; title: string; description: string; interestedBy: string[]; likedBy: string[] }) => (
               <article key={event.id} className="rounded-2xl border border-slate-100 p-4">
                 <p className="text-xs uppercase text-slate-500">{event.category}</p>
                 <h4 className="mt-2 font-semibold text-slate-900">{event.title}</h4>
@@ -198,7 +197,7 @@ export function ProfilePage() {
         <section className="rounded-3xl border border-slate-100 bg-white p-6">
           <h3 className="font-semibold text-slate-900">Conversas recentes</h3>
           <div className="mt-4 space-y-4">
-            {data.threads.map((thread) => (
+            {data.threads.map((thread: { id: string; updatedAt: string; lastMessagePreview: string }) => (
               <div key={thread.id} className="flex items-center justify-between rounded-2xl border border-slate-100 p-4">
                 <div>
                   <p className="text-sm text-slate-500">
@@ -222,13 +221,12 @@ export function ProfilePage() {
     )
   }
 
-  function AdminPanelAlerts() {
-    const admin = resolvedUser.role === 'admin' ? resolvedUser : data.admins[0]
+  function AdminPanelAlerts({ admin }: { admin: AdminProfile }) {
     return (
       <section className="grid gap-4 rounded-3xl border border-slate-100 bg-white p-6">
         <h3 className="font-semibold text-slate-900">Painel do administrador</h3>
         <ul className="space-y-3">
-          {admin.alerts.map((alert) => (
+          {admin.alerts.map((alert: string) => (
             <li
               key={alert}
               className="rounded-2xl border border-brand-100 bg-brand-50/60 p-4 text-sm text-slate-800"

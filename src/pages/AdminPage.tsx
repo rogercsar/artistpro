@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Users, AlertTriangle, TrendingUp, Settings, Shield, FileText } from 'lucide-react'
+import { Users, AlertTriangle, TrendingUp, Settings, FileText } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { Badge } from '../components/Badge'
 import { Button } from '../components/Button'
