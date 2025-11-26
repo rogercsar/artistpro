@@ -6,7 +6,7 @@ import { Button } from '../components/Button'
 import type { ArtistProfile, ContractorProfile } from '../types'
 
 export function EditProfilePage() {
-  const { currentUser, updateProfile } = useApp()
+  const { currentUser } = useApp()
   const navigate = useNavigate()
 
   if (!currentUser) {
