@@ -19,6 +19,7 @@ interface EventCardProps {
   isLiked: boolean
   onToggleInterest: () => void
   onToggleLike: () => void
+  onShare: () => void
 }
 
 export function EventCard({
@@ -28,6 +29,7 @@ export function EventCard({
   isLiked,
   onToggleInterest,
   onToggleLike,
+  onShare,
 }: EventCardProps) {
   return (
     <article
@@ -128,6 +130,7 @@ export function EventCard({
             size="sm"
             className="border border-slate-200"
             iconLeft={<Share2 size={16} />}
+            onClick={onShare}
           >
             Compartilhar
           </Button>

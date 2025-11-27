@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Save } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { Button } from '../components/Button'
+import { ImageUploadField } from '../components/ImageUploadField'
 import type { ArtistProfile, ContractorProfile } from '../types'
 
 export function EditProfilePage() {
@@ -184,36 +185,21 @@ function EditArtistProfile({ artist }: { artist: ArtistProfile }) {
         <section className="rounded-3xl border border-slate-100 bg-white p-8">
           <h2 className="mb-6 font-display text-xl font-semibold text-slate-900">Fotos Profissionais</h2>
           <div className="grid gap-6 md:grid-cols-3">
-            <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">Foto de Rosto (URL)</label>
-              <input
-                type="url"
-                className="w-full rounded-2xl border border-slate-200 px-4 py-3 focus:border-brand-500 focus:outline-none"
-                value={formData.facePhoto}
-                onChange={(e) => setFormData({ ...formData, facePhoto: e.target.value })}
-                placeholder="https://..."
-              />
-            </div>
-            <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">Foto de Corpo Inteiro (URL)</label>
-              <input
-                type="url"
-                className="w-full rounded-2xl border border-slate-200 px-4 py-3 focus:border-brand-500 focus:outline-none"
-                value={formData.fullBodyPhoto}
-                onChange={(e) => setFormData({ ...formData, fullBodyPhoto: e.target.value })}
-                placeholder="https://..."
-              />
-            </div>
-            <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-700">Foto Lateral (URL)</label>
-              <input
-                type="url"
-                className="w-full rounded-2xl border border-slate-200 px-4 py-3 focus:border-brand-500 focus:outline-none"
-                value={formData.sidePhoto}
-                onChange={(e) => setFormData({ ...formData, sidePhoto: e.target.value })}
-                placeholder="https://..."
-              />
-            </div>
+            <ImageUploadField
+              label="Foto de Rosto"
+              value={formData.facePhoto}
+              onChange={(value) => setFormData({ ...formData, facePhoto: value })}
+            />
+            <ImageUploadField
+              label="Foto de Corpo Inteiro"
+              value={formData.fullBodyPhoto}
+              onChange={(value) => setFormData({ ...formData, fullBodyPhoto: value })}
+            />
+            <ImageUploadField
+              label="Foto Lateral"
+              value={formData.sidePhoto}
+              onChange={(value) => setFormData({ ...formData, sidePhoto: value })}
+            />
           </div>
         </section>
 

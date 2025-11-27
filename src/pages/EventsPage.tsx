@@ -94,8 +94,29 @@ export function EventsPage() {
             contractorName={data.contractors.find((c) => c.id === event.contractorId)?.company}
             isInterested={!!currentUser && event.interestedBy.includes(currentUser.id)}
             isLiked={!!currentUser && event.likedBy.includes(currentUser.id)}
-            onToggleInterest={() => toggleInterest(event.id)}
-            onToggleLike={() => toggleLike(event.id)}
+            onToggleInterest={() => {
+              if (!currentUser) {
+                alert('Faça login para demonstrar interesse neste evento.')
+                return
+              }
+              if (currentUser.role !== 'artist') {
+                alert('Apenas artistas podem demonstrar interesse em eventos.')
+                return
+              }
+              toggleInterest(event.id)
+            }}
+            onToggleLike={() => {
+              if (!currentUser) {
+                alert('Faça login para salvar este evento.')
+                return
+              }
+              toggleLike(event.id)
+            }}
+            onShare={() => {
+              const url = `${window.location.origin}/events/${event.id}`
+              navigator.clipboard.writeText(url)
+              alert('Link do evento copiado para a área de transferência!')
+            }}
           />
         ))}
       </div>
