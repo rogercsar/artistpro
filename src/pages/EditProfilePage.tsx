@@ -52,6 +52,10 @@ function EditArtistProfile({ artist }: { artist: ArtistProfile }) {
     specialties: artist.specialties.join(', '),
     preferredCities: artist.preferredCities.join(', '),
     availability: artist.availability.join(', '),
+    cnpj: artist.cnpj || '',
+    facePhoto: artist.facePhoto || '',
+    fullBodyPhoto: artist.fullBodyPhoto || '',
+    sidePhoto: artist.sidePhoto || '',
     social: {
       instagram: artist.social?.instagram || '',
       youtube: artist.social?.youtube || '',
@@ -76,6 +80,10 @@ function EditArtistProfile({ artist }: { artist: ArtistProfile }) {
       specialties: formData.specialties.split(',').map((s) => s.trim()).filter(Boolean),
       preferredCities: formData.preferredCities.split(',').map((s) => s.trim()).filter(Boolean),
       availability: formData.availability.split(',').map((s) => s.trim()).filter(Boolean),
+      cnpj: formData.cnpj,
+      facePhoto: formData.facePhoto,
+      fullBodyPhoto: formData.fullBodyPhoto,
+      sidePhoto: formData.sidePhoto,
       social: formData.social,
     }
 
@@ -120,7 +128,17 @@ function EditArtistProfile({ artist }: { artist: ArtistProfile }) {
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               />
             </div>
-            <div className="md:col-span-2">
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-700">CNPJ</label>
+              <input
+                type="text"
+                className="w-full rounded-2xl border border-slate-200 px-4 py-3 focus:border-brand-500 focus:outline-none"
+                value={formData.cnpj}
+                onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })}
+                placeholder="00.000.000/0000-00"
+              />
+            </div>
+            <div>
               <label className="mb-2 block text-sm font-semibold text-slate-700">Localização</label>
               <input
                 type="text"
@@ -158,6 +176,42 @@ function EditArtistProfile({ artist }: { artist: ArtistProfile }) {
                 value={formData.highlight}
                 onChange={(e) => setFormData({ ...formData, highlight: e.target.value })}
                 placeholder="Uma frase ou texto curto que destaque seu diferencial"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-3xl border border-slate-100 bg-white p-8">
+          <h2 className="mb-6 font-display text-xl font-semibold text-slate-900">Fotos Profissionais</h2>
+          <div className="grid gap-6 md:grid-cols-3">
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-700">Foto de Rosto (URL)</label>
+              <input
+                type="url"
+                className="w-full rounded-2xl border border-slate-200 px-4 py-3 focus:border-brand-500 focus:outline-none"
+                value={formData.facePhoto}
+                onChange={(e) => setFormData({ ...formData, facePhoto: e.target.value })}
+                placeholder="https://..."
+              />
+            </div>
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-700">Foto de Corpo Inteiro (URL)</label>
+              <input
+                type="url"
+                className="w-full rounded-2xl border border-slate-200 px-4 py-3 focus:border-brand-500 focus:outline-none"
+                value={formData.fullBodyPhoto}
+                onChange={(e) => setFormData({ ...formData, fullBodyPhoto: e.target.value })}
+                placeholder="https://..."
+              />
+            </div>
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-700">Foto Lateral (URL)</label>
+              <input
+                type="url"
+                className="w-full rounded-2xl border border-slate-200 px-4 py-3 focus:border-brand-500 focus:outline-none"
+                value={formData.sidePhoto}
+                onChange={(e) => setFormData({ ...formData, sidePhoto: e.target.value })}
+                placeholder="https://..."
               />
             </div>
           </div>

@@ -26,6 +26,10 @@ export const mockData: AppDataShape = {
         ],
         videos: ['https://www.youtube.com/watch?v=ysz5S6PUM-U'],
       },
+      cnpj: '12.345.678/0001-90',
+      facePhoto: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80',
+      fullBodyPhoto: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=400&q=80',
+      sidePhoto: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
       availability: ['Abril (turnês)', 'Maio (festivais)', 'Julho (campanhas)'],
       stats: { views: 18450, saved: 3120, responseRate: 96 },
       feed: [

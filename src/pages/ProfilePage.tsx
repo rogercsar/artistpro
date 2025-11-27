@@ -74,6 +74,12 @@ export function ProfilePage() {
                 </Badge>
               ))}
             </div>
+            {artist.cnpj && (
+              <div className="mt-6 border-t border-slate-100 pt-4">
+                <p className="text-xs font-semibold uppercase text-slate-500">CNPJ</p>
+                <p className="mt-1 text-sm text-slate-900">{artist.cnpj}</p>
+              </div>
+            )}
           </div>
           <div className="rounded-3xl border border-slate-100 bg-white p-6">
             <h3 className="font-semibold text-slate-900">Agenda visível</h3>
@@ -99,13 +105,51 @@ export function ProfilePage() {
           </div>
         </section>
 
+        {(artist.facePhoto || artist.fullBodyPhoto || artist.sidePhoto) && (
+          <section className="rounded-3xl border border-slate-100 bg-white p-6">
+            <h3 className="font-semibold text-slate-900">Fotos Profissionais</h3>
+            <div className="mt-4 grid gap-4 sm:grid-cols-3">
+              {artist.facePhoto && (
+                <div>
+                  <p className="mb-2 text-xs font-semibold uppercase text-slate-500">Rosto</p>
+                  <img
+                    src={artist.facePhoto}
+                    alt="Rosto"
+                    className="aspect-[3/4] w-full rounded-2xl object-cover"
+                  />
+                </div>
+              )}
+              {artist.fullBodyPhoto && (
+                <div>
+                  <p className="mb-2 text-xs font-semibold uppercase text-slate-500">Corpo Inteiro</p>
+                  <img
+                    src={artist.fullBodyPhoto}
+                    alt="Corpo Inteiro"
+                    className="aspect-[3/4] w-full rounded-2xl object-cover"
+                  />
+                </div>
+              )}
+              {artist.sidePhoto && (
+                <div>
+                  <p className="mb-2 text-xs font-semibold uppercase text-slate-500">Lateral</p>
+                  <img
+                    src={artist.sidePhoto}
+                    alt="Lateral"
+                    className="aspect-[3/4] w-full rounded-2xl object-cover"
+                  />
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
         <section className="grid gap-6 lg:grid-cols-2">
           <div className="rounded-3xl border border-slate-100 bg-white p-6">
             <header className="flex items-center justify-between">
               <h3 className="font-semibold text-slate-900">Portfólio</h3>
-              <Button 
-                size="sm" 
-                variant="ghost" 
+              <Button
+                size="sm"
+                variant="ghost"
                 iconLeft={<Camera size={16} />}
                 onClick={() => setShowUploadModal(true)}
               >
@@ -156,9 +200,9 @@ export function ProfilePage() {
               <h3 className="font-semibold text-slate-900">Reviews</h3>
               <p className="text-sm text-slate-500">Contratantes reais avaliando sua entrega.</p>
             </div>
-            <Button 
-              size="sm" 
-              variant="ghost" 
+            <Button
+              size="sm"
+              variant="ghost"
               iconLeft={<BookmarkPlus size={16} />}
               onClick={() => setShowReviewModal(true)}
             >

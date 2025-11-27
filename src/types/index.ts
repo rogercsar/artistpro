@@ -49,6 +49,12 @@ export interface ArtistProfile extends BaseUser {
     photos: string[]
     videos: string[]
   }
+  // Professional Data
+  cnpj?: string
+  facePhoto?: string
+  fullBodyPhoto?: string
+  sidePhoto?: string
+  
   availability: string[]
   stats: {
     views: number
